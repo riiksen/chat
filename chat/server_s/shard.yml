@@ -1,0 +1,26 @@
+name: server_s
+version: 0.1.0
+
+targets:
+  shards:
+    main: test.cr
+# authors:
+#   - name <email@example.com>
+
+# description: |
+#   Short description of server_s
+
+dependencies:
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+  db:
+    github: crystal-lang/crystal-db
+#   pg:
+#     github: will/crystal-pg
+#     version: "~> 0.5"
+
+# development_dependencies:
+#   webmock:
+#     github: manastech/webmock.cr
+
+# license: MIT
