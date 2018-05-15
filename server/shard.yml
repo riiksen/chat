@@ -6,13 +6,15 @@ authors:
 
 targets:
   server:
-    main: src/main.cr
+    main: src/server.cr
 
 dependencies:
   db:
     github: crystal-lang/crystal-db
   sqlite3:
     github: crystal-lang/crystal-sqlite3
+  habitat:
+    github: luckyframework/habitat
 
 crystal: 0.24.2
 

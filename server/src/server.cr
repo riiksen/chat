@@ -2,79 +2,31 @@ require "socket"
 require "db"
 require "sqlite3"
 require "json"
+# require "habitat"
 
-struct Client
-  property username : String
-  getter socket : TCPSocket
-
-  def initialize(@username : String, @socket : TCPSocket); end
-end
-
-struct Room
-  property name : String
-  getter id : Int32
-  getter users : Array(Client) = [] of Client
-  property hidden : Bool
-
-  def initialize(@name : String, @id : Int32, @hidden = false)
-  end
-
-  def add_user(client : Client)
-    self.users << client
-  end
-end
-
-struct User
-  property username : String
-  getter client : Client
-  getter id : UInt32
-  getter room : Room
-
-  def initialize(@username : String, @client : Client, @id : UInt32); end
-
-  def check_params(user_params : JSON::Any)
-    user_params.each do |key, value|
-      case key
-      when "username"
-
-      when "id"
-      end
-    end
-  end
-
-  def change_room(room : Room)
-    self.room = room unless room == self.room
-  end
-
-
-end
-
-# struct Command
-#   def initialize(); end
-# 
-#   def call()
-# 
-#   end
-# end
+# require "user"
+# require "room"
+require "server/**"
 
 class Server
-  def initialize(port)
+
+  @server : TCPServer
+  @rooms : Array(Room) = [] of Room
+  @users : Array(User) = [] of User
+
+  def initialize(port, db_url)
     @server = TCPServer.new("127.0.0.1", port)
-    @rooms = [] of Room
-    @clients = [] of Client
-    @users = [] of User
-    @db = DB.open "sqlite3:./db.db"
-    run
+    @db = DB.open db_url
+    db_get_rooms
+    spawn run
     admin
   end
 
   def admin
     loop do
-      puts gets
       case gets
       when "users"
-        # @users.each
-        @clients.each do |client|
+        @users.each do |user|
           puts "#{client.username} => #{client.room.name}"
         end
       end
@@ -83,6 +35,9 @@ class Server
 
   def run
     spawn { loop { spawn conn_routine(@server.accept) } }
+    loop do
+      
+    end
   end
 
   def conn_routine(conn)
@@ -91,27 +46,19 @@ class Server
       conn.close
       return
     end
-    conn.puts "data"
-    data = conn.gets
+    conn.puts "up?" # Request User Params
+    user_params = conn.gets
     # {
     # "username": "asdf",
     # "uid": "asda12easdnb1872heuads"
     # }
     begin
-      data = JSON.parse(data)
+      user_params = JSON.parse(user_params)
+      User.check_params(user_params)
     rescue
       conn.puts "nope"
       conn.close
       return
-    end
-    user_params = NamedTuple(username: String, uid: String)
-    data.each do |key, value|
-      case key
-      when "username"
-        user_params[:username] = value
-      when "uid"
-        user_params[:uid] = value
-      end
     end
     # rs = @db.query_one? "select uid from users where uid = ?", data["uid"], as: String
     puts "#{conn.remote_address} connected, username: #{user_params[:username]}, uid: #{user_params[:uid]}"
@@ -150,13 +97,13 @@ class Server
         when "!cr"
 
         when "!disconnect", "!dc"
-          @clients.delete(client)
+          @users.delete(client)
           client.socket.close
         else
 
         end
       else
-        @clients.each do |other_client|
+        @users.each do |other_client|
           unless client == other_client
             other_client.socket.puts "#{client.username}: #{msg}"
           end
@@ -164,10 +111,14 @@ class Server
       end
     end
   rescue IO::EOFError | IO::Error
-    @clients.reject! { |other_client| other_client.username == client.username}
+    @users.reject! { |other_client| other_client.username == client.username}
     puts "Client #{client.username}"
     client.socket.close
   end
+
+  private def db_get_rooms
+
+  end
 end
 
-Server.new(2000)
+Server.new(2000, "sqlite3:./db.db")
