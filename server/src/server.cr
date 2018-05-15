@@ -95,7 +95,8 @@ class Server
             ASDF
           end
         when "!cr"
-
+          room = @rooms.find { |elm| elm.name == cmd[2] }
+          user.chan
         when "!disconnect", "!dc"
           @users.delete(client)
           client.socket.close
