@@ -7,6 +7,7 @@ struct User
   @conn : Connection
   @c_room : Room
   @sid : Int32
+  @permissions : PermissionSet
 
   def initialize(@connection : Connection, user_params : JSON::Any, @permissions)
     user_params.each do |key, value|
@@ -37,9 +38,17 @@ struct User
   end
 
   def change_room(room : Room)
-    self.room = room unless room == self.room
+    if self.join room
+      self.c_room = room
+    end
   end
 
+  def join(room : Room)
+    if room.required_permissions <= self.permissions
+  
+    
+  end
+  
   class ParamsError < Exception; end
 end
 
