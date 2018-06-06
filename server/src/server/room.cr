@@ -4,11 +4,15 @@ struct Room
 
   @name : String
   @users : Array(User) = [] of User
-  @p_room : Room
+  @p_room : Room?
   @room_flags : Int32
   @type : Int32
-  @blacklist : Array(rule: String)
-  @whitelist : Array(rule: String)
+  # @blacklist : Array(rule: String)
+  # @whitelist : Array(rule: String)
+
+  @blacklist : Array(String) = [] of String
+  @whitelist : Array(String) = [] of String
+
   # 
   # 
   # 

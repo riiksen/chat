@@ -1,7 +1,7 @@
 struct Connection
 
   @socket : TCPSocket
-  @voice : UDPSocket
+  @voice : UDPSocket?
 
   def initialize(@socket)
 

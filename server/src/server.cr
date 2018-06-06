@@ -4,9 +4,12 @@ require "sqlite3"
 require "json"
 # require "habitat"
 
-# require "user"
-# require "room"
-require "server/**"
+require "./server/db"
+require "./server/connection"
+require "./server/permission_set"
+require "./server/user"
+require "./server/room"
+# require "server/**"
 
 class Server
 
@@ -16,7 +19,7 @@ class Server
 
   def initialize(port, db_url)
     @server = TCPServer.new("127.0.0.1", port)
-    @db = DB.open db_url
+    # @db = DB.open db_url
     db_get_rooms
     spawn run
     admin
@@ -47,7 +50,7 @@ class Server
       return
     end
     conn.puts "up?" # Request User Params
-    user_params = conn.gets
+    user_params = conn.gets.to_s
     # {
     # "username": "asdf",
     # "uid": "asda12easdnb1872heuads"
