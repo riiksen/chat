@@ -1,7 +1,7 @@
 class Db
   getter handle
 
-  @@handle : DB::Conenction?
+  @@handle : DB::Connection?
 
   def connect(addr : String)
     raise AlreadyConnectedError if @@handle
@@ -12,5 +12,5 @@ class Db
 
   end
 
-  class AlreadyConnectedError < Error; end
+  class AlreadyConnectedError < Exception; end
 end

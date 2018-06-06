@@ -2,7 +2,7 @@ name: server
 version: 0.1.0
 
 authors:
-  - Mike Kielan
+  - Tim Fox
 
 targets:
   server:
@@ -15,6 +15,9 @@ dependencies:
     github: crystal-lang/crystal-sqlite3
   habitat:
     github: luckyframework/habitat
+	qt5:
+		github: Papierkorb/qt5.cr
+		barnch: master-ready-to-use
 
 crystal: 0.24.2
 

@@ -1,6 +1,8 @@
 struct PermissionSet
+
   
   @permissions : Array(Permission)
+	@join_power : Int32
   
   def initialize(@permissions : Array(Permission))
     
@@ -20,5 +22,28 @@ struct PermissionSet
 end
 
 struct Permission
-  
+
+	def ==(that : Permission)
+
+	end
+
+	def !=(that : Permission)
+
+	end
+
+	def <(that : Permission)
+
+	end
+
+	def >(that : Permission)
+
+	end
+
+	def <=(that : Permission)
+
+	end
+
+  def >=(that : Permission)
+
+	end
 end

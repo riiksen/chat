@@ -8,7 +8,7 @@ struct User
   @c_room : Room?
   @sid : Int32?
   @uid : String
-  @permissions : PermissionSet
+  @permissions : NamedTuple(join_power: Permission)
 
   def initialize(@conn : Connection, user_params : JSON::Any, @permissions)
     user_params.each do |key, value|
@@ -53,13 +53,11 @@ struct User
   end
 
   def change_room(room : Room)
-    if self.join room
-      self.c_room = room
-    end
+		self.c_room = room if self.join room
   end
 
   def join(room : Room)
-    if room.required_permissions <= self.permissions
+    if self.permissions[:join_power] >= room.required_permissions[:join_power]
   
     end
   end
