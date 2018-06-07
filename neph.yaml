@@ -1,0 +1,13 @@
+main:
+  command:
+    echo "Hello World"
+  depends_on:
+    - client
+    - server
+
+client:
+  command: crystal src/client.cr
+  dir: client_s
+
+server:
+  command:
